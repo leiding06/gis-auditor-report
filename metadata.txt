@@ -1,0 +1,16 @@
+[general]
+name=GIS Auditor Report
+description=A user-friendly QA/QC tool for validating GIS data with an HTML reporting interface.
+version=1.0.0
+qgisMinimumVersion=3.10
+about=
+icon=icon.png
+category=Vector
+author=Your Name
+email=your.email@example.com
+repository=
+**homepage=https://github.com/leiding06/gis-auditor-report**
+**tracker=https://github.com/leiding06/gis-auditor-report/issues**
+
+[qgis]
+needs_restart=false
