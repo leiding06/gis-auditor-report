@@ -26,10 +26,11 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-
+from qgis.PyQt.QtWidgets import QDialogButtonBox
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'gis_auditor_report_dialog_base.ui'))
+
 
 
 class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
@@ -41,4 +42,11 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         # self.<objectname>, and you can use autoconnect slots - see
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
+        
         self.setupUi(self)
+        ok_button = self.button_box.button(QDialogButtonBox.Ok)
+        if ok_button:
+            # change to run
+            ok_button.setText("Run")
+
+            ok_button.setObjectName("runButton")
