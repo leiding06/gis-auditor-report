@@ -1,23 +1,24 @@
 # GIS Auditor Report
 
-**GIS Auditor Report** is a QGIS plugin for auditing and validating vector layers.  
+GIS Auditor Report is a QGIS plugin for auditing and validating vector layers.
 It allows users to define and run a series of essential validation checks across vector layers and standalone attribute tables within a QGIS project.
-It helps users identify data quality issues by checking **shared keys**, **spatial relationships**, and **duplicate values**, with results available in clear, exportable reports.
+
+It helps users identify data quality issues by checking duplicate values, spatial relationships (Parent/Child adherence), and exclusion zone violations, with results available in clear, exportable reports.
 
 ---
-## ✨ Key Features
+## Key Features
 
 Unlike rigid, project-specific QA tools, this plugin offers flexibility through user-defined checks:
 
-1.  **Shared Key Match:** Validate that attribute values match between a **Source Layer** (and its selected field) and a **Target Layer/Table** (and its selected field).
-2.  **Spatial Relationship Check:** Test for geometric integrity (e.g., Are all features in Layer A **`within`** features in Layer B? **`intersects`**, **`touches`**, etc.).
-3.  **Duplicate/Uniqueness Check:** Identify non-unique values for a selected field across a layer, helping to enforce data integrity.
-4.  **Vector-to-Table Check:** Perform attribute checks against non-spatial tables (like CSV files or database views).
-5.  **Actionable HTML Report:** All errors and mismatches are compiled into a clearly formatted, downloadable HTML report for easy sharing and tracking.
+Duplicate Value Check: Identify non-unique attribute values for a selected field across a layer, helping to enforce data integrity and uniqueness constraints.
+
+Spatial Relationship Check: Verify fundamental topological rules between features, ensuring a Child Layer (e.g., points) adheres to rules like within or contained by its Parent Layer (e.g., polygons).
+
+Exclusion Zone Check: Identify features in a Target Layer that illegally touch or intersect a predefined Exclusion Zone boundary.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation
 
@@ -35,7 +36,7 @@ Unlike rigid, project-specific QA tools, this plugin offers flexibility through 
 
 ---
 
-## 💻 For Developers & Contributors
+## For Developers & Contributors
 
 We welcome contributions! Your current code, which includes advanced logic for archaeological cross-checks, demonstrates a high level of Python and PyQGIS expertise.
 
@@ -54,6 +55,6 @@ If you are interested in contributing, please check out the following areas:
 
 ---
 
-## 📜 License
+## License
 
 This project is licensed under the GNU General Public License v2.0 or later (**GPL-2.0-or-later**).
