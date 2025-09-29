@@ -49,7 +49,7 @@ If you are interested in contributing, please check out the following areas:
 ### How to Contribute
 
 1.  Fork this repository.
-2.  Clone your fork: `git clone [your-fork-url]`
+2.  Clone your fork
 3.  Create a new branch for your feature or bug fix.
 4.  Submit a **Pull Request (PR)** detailing your changes.
 
