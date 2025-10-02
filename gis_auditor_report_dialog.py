@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#./gis_auditor_report_dialog.py
 """
 /***************************************************************************
  GISAuditorReportDialog
@@ -23,30 +24,305 @@
 """
 
 import os
-
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-from qgis.PyQt.QtWidgets import QDialogButtonBox
-# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
+from qgis.PyQt.QtWidgets import (QDialogButtonBox, QHBoxLayout, QPushButton, QWidget, QComboBox, QMessageBox)
+from qgis.PyQt.QtCore import Qt
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
+from qgis.core import QgsMapLayerProxyModel 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'gis_auditor_report_dialog_base.ui'))
 
 
 
 class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
+    # Set the maximum allowed rows per check section
+    MAX_ROWS_PER_CHECK = 10
+    
+    # Define Spatial Relationship Options for the ComboBox
+    SPATIAL_RELATIONSHIPS = [
+        ("Select relationship...", ""), # Placeholder
+        ("Child must be Within Parent", "within"),
+        ("Child must be Contained By Parent", "contains"),
+        ("Child must Intersect Parent", "intersects"),
+        
+    ]
+    
     def __init__(self, parent=None):
         """Constructor."""
         super(GISAuditorReportDialog, self).__init__(parent)
-        # Set up the user interface from Designer through FORM_CLASS.
-        # After self.setupUi() you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        
         self.setupUi(self)
+        self.progressBar.setValue(0) # Start from 0 not the default 24, but can use a bigger number when take screenshot for product page
+        # Dictionary to store dynamically created row widgets for each check type.
+        self.check_rows = {
+            'duplicate': [],
+            'spatial': [],
+            'exclusion': []
+        }
+        
+        # 1. Initialize UI components and connect signals
+        self._init_button_box()
+        self._init_check_ui()
+        
+        # 2. Add an initial row for each section to start
+        self._add_check_row('duplicate')
+        self._add_check_row('spatial')
+        self._add_check_row('exclusion')
+
+
+    # ----------------------------------------------------------------------
+    # UI Initialization and Signal Connection Methods
+    # ----------------------------------------------------------------------
+
+    def _init_button_box(self):
+        """Changing 'Ok' to 'Run'."""
         ok_button = self.button_box.button(QDialogButtonBox.Ok)
         if ok_button:
-            # change to run
             ok_button.setText("Run")
-
             ok_button.setObjectName("runButton")
+            # Connect 'Run' button to the main execution function
+            ok_button.clicked.connect(self.run_audit_checks)
+ 
+
+    def _init_check_ui(self):
+        """Connects the 'Add new row' buttons for all sections."""
+        
+        # Duplicate Check, use lambda here
+        self.addDuplicateLayerButton.clicked.connect(lambda: self._add_check_row('duplicate'))
+        
+        # Spatial Relationship Check
+        self.addSpatialButton.clicked.connect(lambda: self._add_check_row('spatial'))
+        
+        # Exclusion Zone Check
+        self.addExclusionButton.clicked.connect(lambda: self._add_check_row('exclusion'))
+
+    # ----------------------------------------------------------------------
+    # Dynamic Row Management (Creation and Removal)
+    # ----------------------------------------------------------------------
+
+    def _add_check_row(self, check_type: str):
+        """
+        Dynamically creates and adds a new check configuration row to the UI.
+        Enforces MAX_ROWS_PER_CHECK limit.
+        """
+        # 1. Row limit check
+        if len(self.check_rows[check_type]) >= self.MAX_ROWS_PER_CHECK:
+            QMessageBox.warning(self, "Limit Reached", 
+                                f"Maximum of {self.MAX_ROWS_PER_CHECK} checks reached for {check_type}.")
+            return
+
+        # 2. Create the row container and layout
+        row_widget = QWidget()
+        row_layout = QHBoxLayout(row_widget)
+        row_layout.setContentsMargins(0, 5, 0, 5) # Set spacing
+        
+        # 3. Add components based on check type
+        if check_type == 'duplicate':
+            self._setup_duplicate_row(row_layout)
+            target_layout = self.duplicateCheckContent
+            
+        elif check_type == 'spatial':
+            self._setup_spatial_row(row_layout)
+            target_layout = self.spatialCheckContent
+            
+        elif check_type == 'exclusion':
+            self._setup_exclusion_row(row_layout)
+            target_layout = self.exclusionCheckContent
+            
+        else:
+            return
+
+        # 4. Create and connect the Remove Button (common to all)
+        remove_btn = QPushButton("Remove")
+        remove_btn.setObjectName(f"remove{check_type.capitalize()}RowButton")
+        remove_btn.setFixedWidth(80)
+        remove_btn.clicked.connect(
+            lambda checked, widget=row_widget: self._remove_check_row(widget, check_type)
+        )
+        row_layout.addWidget(remove_btn, 10) # 10% width share
+
+        # 5. Insert the new row into the target QVBoxLayout, just before the 'Add' button --- IMPORTANT INSERT
+        # addWidget is most common, add to end. but this can give me the control of 'add below the last item', which is my 'Add' button!
+        target_layout.insertWidget(
+            target_layout.count() - 1, 
+            row_widget
+        )
+        
+        # 6. Store the row reference
+        self.check_rows[check_type].append(row_widget)
+
+
+    
+    def _setup_duplicate_row(self, layout: QHBoxLayout):
+        """Sets up QgsMapLayerComboBox and QgsFieldComboBox for Duplicate Check."""
+        
+        layer_combo = QgsMapLayerComboBox()
+        layer_combo.setObjectName("duplicateLayerCombo")
+        
+        
+        
+        
+        field_combo = QgsFieldComboBox()
+        field_combo.setObjectName("duplicateFieldCombo")
+        
+        # Auto-update field combobox when layer changes
+        layer_combo.layerChanged.connect(field_combo.setLayer)
+
+        layout.addWidget(layer_combo, 60)
+        layout.addWidget(field_combo, 30)
+
+    def _setup_spatial_row(self, layout: QHBoxLayout):
+        """Sets up Parent/Child Layer Comboboxes and Relationship ComboBox."""
+        
+        # 1. Parent Layer
+        parent_layer = QgsMapLayerComboBox()
+        parent_layer.setObjectName("spatialParentLayerCombo")
+        parent_layer.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+
+        # 2. Child Layer
+        child_layer = QgsMapLayerComboBox()
+        child_layer.setObjectName("spatialChildLayerCombo")
+        child_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+        
+        # 3. Relationship ComboBox
+        relationship_combo = QComboBox()
+        relationship_combo.setObjectName("spatialRelationshipCombo")
+        for text, data in self.SPATIAL_RELATIONSHIPS:
+            relationship_combo.addItem(text, data)
+
+        # Adjust the stretch ratios for three items + button (40, 40, 10, 10)
+        layout.addWidget(parent_layer, 35) 
+        layout.addWidget(child_layer, 35)
+        layout.addWidget(relationship_combo, 20)
+
+
+    def _setup_exclusion_row(self, layout: QHBoxLayout):
+        """Sets up Target Layer and Exclusion Zone Layer Comboboxes."""
+        
+        # 1. Target Layer (The layer being checked)
+        target_layer = QgsMapLayerComboBox()
+        target_layer.setObjectName("exclusionTargetLayerCombo")
+        target_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+        # 2. Exclusion Zone Layer (The layer defining the constraint)
+        exclusion_layer = QgsMapLayerComboBox()
+        exclusion_layer.setObjectName("exclusionZoneLayerCombo")
+        exclusion_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
+
+        # Adjust the stretch ratios for two items + button (45, 45, 10)
+        layout.addWidget(target_layer, 45)
+        layout.addWidget(exclusion_layer, 45)
+
+
+    def _remove_check_row(self, row_widget: QWidget, check_type: str):
+        """Removes a row widget from the UI and the internal list."""
+        if row_widget in self.check_rows[check_type]:
+            # Remove widget from layout and delete
+            row_widget.setParent(None)
+            row_widget.deleteLater()
+            
+            # Remove reference from the list
+            self.check_rows[check_type].remove(row_widget)
+
+
+    # ----------------------------------------------------------------------
+    # Configuration Collection Methods
+    # ----------------------------------------------------------------------
+
+    def get_duplicate_check_configs(self) -> list:
+        """Collects Layer ID and Field Name for all Duplicate Check rows."""
+        configs = []
+        for row_widget in self.check_rows['duplicate']:
+            layer_combo = row_widget.findChild(QgsMapLayerComboBox, "duplicateLayerCombo")
+            field_combo = row_widget.findChild(QgsFieldComboBox, "duplicateFieldCombo")
+            
+            if layer_combo and field_combo and layer_combo.currentLayer() and field_combo.currentField():
+                layer = layer_combo.currentLayer()
+                configs.append({
+                    'check_type': 'duplicate',
+                    'layer_id': layer.id(),
+                    'layer_name': layer.name(),
+                    'field_name': field_combo.currentField()
+                })
+        return configs
+        
+    def get_spatial_check_configs(self) -> list:
+        """Collects Parent Layer, Child Layer, and Relationship for all Spatial Check rows."""
+        configs = []
+        for row_widget in self.check_rows['spatial']:
+            parent_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialParentLayerCombo")
+            child_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialChildLayerCombo")
+            rel_combo = row_widget.findChild(QComboBox, "spatialRelationshipCombo")
+            
+            if parent_combo and child_combo and rel_combo:
+                parent_layer = parent_combo.currentLayer()
+                child_layer = child_combo.currentLayer()
+                relationship_data = rel_combo.currentData()
+                
+                # Ensure both layers are selected and a valid relationship is chosen
+                if parent_layer and child_layer and relationship_data:
+                    configs.append({
+                        'check_type': 'spatial',
+                        'parent_id': parent_layer.id(),
+                        'parent_name': parent_layer.name(),
+                        'child_id': child_layer.id(),
+                        'child_name': child_layer.name(),
+                        'relationship': relationship_data # 'within', 'contains', etc.
+                    })
+        return configs
+
+    def get_exclusion_check_configs(self) -> list:
+        """Collects Target Layer and Exclusion Layer for all Exclusion Zone Check rows."""
+        configs = []
+        for row_widget in self.check_rows['exclusion']:
+            target_combo = row_widget.findChild(QgsMapLayerComboBox, "exclusionTargetLayerCombo")
+            exclusion_combo = row_widget.findChild(QgsMapLayerComboBox, "exclusionZoneLayerCombo")
+            
+            if target_combo and exclusion_combo:
+                target_layer = target_combo.currentLayer()
+                exclusion_layer = exclusion_combo.currentLayer()
+                
+                if target_layer and exclusion_layer:
+                    configs.append({
+                        'check_type': 'exclusion',
+                        'target_id': target_layer.id(),
+                        'target_name': target_layer.name(),
+                        'exclusion_id': exclusion_layer.id(),
+                        'exclusion_name': exclusion_layer.name()
+                    })
+        return configs
+
+    # ----------------------------------------------------------------------
+    # Main Execution
+    # ----------------------------------------------------------------------
+
+    def run_audit_checks(self):
+        """Main function to collect all configurations and initiate the audit process."""
+        
+        # 1. Collect all configurations
+        all_configs = []
+        all_configs.extend(self.get_duplicate_check_configs())
+        all_configs.extend(self.get_spatial_check_configs())
+        all_configs.extend(self.get_exclusion_check_configs())
+
+        # 2. Check for tasks
+        if not all_configs:
+            QMessageBox.warning(self, "Audit Warning", 
+                                "No check configurations have been selected. Please add and configure at least one row.")
+            return
+
+        # 3. Start the audit process (Placeholder for CheckRunner integration)
+        self.progressBar.setValue(0)
+        self.progressBar.show()
+        
+        print("--- All Audit Configurations ---")
+        for config in all_configs:
+            print(config)
+            
+        # TODO:  integrate and call CheckRunner class
+        # from auditor.check_runner import CheckRunner
+        # runner = CheckRunner(all_configs)
+        # runner.run_checks()
+            
+        # 4. Close the window (might move this into the CheckRunner's completion signal)
+        self.accept()

@@ -153,47 +153,14 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="duplicateCheckBaseRow" stretch="60,30,10">
+                <layout class="QHBoxLayout" name="duplicateCheckBaseRow" stretch="">
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
-                 <item>
-                  <widget class="QgsMapLayerComboBox" name="duplicateCheckLayer">
-                   <property name="maximumSize">
-                    <size>
-                     <width>400</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QgsFieldComboBox" name="duplicateCheckField">
-                   <property name="maximumSize">
-                    <size>
-                     <width>200</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="removeDuplicateButton">
-                   <property name="maximumSize">
-                    <size>
-                     <width>100</width>
-                     <height>16777215</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
                <item>
-                <widget class="QPushButton" name="addDuplicateLayerButton_2">
+                <widget class="QPushButton" name="addDuplicateLayerButton">
                  <property name="minimumSize">
                   <size>
                    <width>80</width>
@@ -263,21 +230,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="spatialCheckBaseRow" stretch="45,45,10">
-                 <item>
-                  <widget class="QgsMapLayerComboBox" name="parentLayer"/>
-                 </item>
-                 <item>
-                  <widget class="QgsMapLayerComboBox" name="chileLayer"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="removeSpatialButton">
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <layout class="QHBoxLayout" name="spatialCheckBaseRow" stretch=""/>
                </item>
                <item>
                 <widget class="QPushButton" name="addSpatialButton">
@@ -344,21 +297,7 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="exclusionCheckBaseRow" stretch="45,45,10">
-                 <item>
-                  <widget class="QgsMapLayerComboBox" name="targetLayer"/>
-                 </item>
-                 <item>
-                  <widget class="QgsMapLayerComboBox" name="exclusionLayer"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="removeExclusionButton">
-                   <property name="text">
-                    <string>Remove</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+                <layout class="QHBoxLayout" name="exclusionCheckBaseRow" stretch=""/>
                </item>
                <item>
                 <widget class="QPushButton" name="addExclusionButton">
@@ -404,18 +343,6 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QgsFieldComboBox</class>
-   <extends>QComboBox</extends>
-   <header>qgsfieldcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QgsMapLayerComboBox</class>
-   <extends>QComboBox</extends>
-   <header>qgsmaplayercombobox.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections>
   <connection>
