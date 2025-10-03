@@ -30,6 +30,12 @@ from qgis.PyQt.QtWidgets import (QDialogButtonBox, QHBoxLayout, QPushButton, QWi
 from qgis.PyQt.QtCore import Qt
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 from qgis.core import QgsMapLayerProxyModel 
+from .core.audit_runner import AuditRunner # 
+from qgis.PyQt.QtWidgets import QDialogButtonBox, QFileDialog, QMessageBox # Added QFileDialog, QMessageBox
+from qgis.PyQt.QtCore import QDateTime, QDir, QUrl # Added QDateTime, QDir for path handling
+from qgis.PyQt.QtGui import QDesktopServices
+
+
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'gis_auditor_report_dialog_base.ui'))
 
@@ -292,6 +298,40 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
                     })
         return configs
 
+    # Get a select directory
+    def _get_report_save_path(self):
+        """Opens a file dialog to let the user choose the output HTML report path."""
+        
+        # QFileDialog.getSaveFileName returns a tuple (filepath, filter)
+        # The default file name should be relevant (e.g., 'GIS_Audit_Report_20251004.html')
+        default_name = "GIS_Audit_Report_" + QDateTime.currentDateTime().toString("yyyyMMdd_hhmmss") + ".html"
+        
+        # Use QFileDialog to get a save file name
+        filepath, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Audit Report", # Dialog title
+            os.path.join(QDir.homePath(), default_name), # Default starting location
+            "HTML Report (*.html)" # File filter
+        )
+        
+        return filepath # Returns the selected file path (or an empty string if cancelled)
+
+    def _handle_audit_completion(self, report_path: str):
+        """
+        Handles the actions taken when the AuditRunner finishes.
+        This replaces the old self.accept() call.
+        """
+        
+        # 1. Hide the progress bar
+        self.progressBar.hide()
+        
+        # 2. Show the success message (QMessageBox)
+        QMessageBox.information(
+            self,
+            "Audit Completed",
+            f"The GIS Audit has successfully finished.\n\nReport saved to:\n{report_path} and opened in your default website."
+        )
+        QDesktopServices.openUrl(QUrl.fromLocalFile(report_path))
     # ----------------------------------------------------------------------
     # Main Execution
     # ----------------------------------------------------------------------
@@ -299,7 +339,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
     def run_audit_checks(self):
         """Main function to collect all configurations and initiate the audit process."""
         
-        # 1. Collect all configurations
+        # 1. Collect all configurations (existing code)
         all_configs = []
         all_configs.extend(self.get_duplicate_check_configs())
         all_configs.extend(self.get_spatial_check_configs())
@@ -311,18 +351,25 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
                                 "No check configurations have been selected. Please add and configure at least one row.")
             return
 
-        # 3. Start the audit process (Placeholder for CheckRunner integration)
+        # 3. Get the report save path from the user (NEW STEP)
+        report_path = self._get_report_save_path()
+        
+        if not report_path:
+            # User cancelled the save dialog
+            return
+            
+        # 4. Start the audit process: Instantiate the Runner
+        self.runner = AuditRunner(
+            all_configs=all_configs,
+            progress_bar=self.progressBar,
+            report_path=report_path, # <--- PASS THE NEW PATH
+            parent=self
+        )
+        
+        # 5. Connect the Runner's signal to the completion handler (NEW CONNECTION)
+        self.runner.report_generated.connect(self._handle_audit_completion)
+
+        # 6. Show the progress bar and Start the audit work
         self.progressBar.setValue(0)
         self.progressBar.show()
-        
-        print("--- All Audit Configurations ---")
-        for config in all_configs:
-            print(config)
-            
-        # TODO:  integrate and call CheckRunner class
-        # from auditor.check_runner import CheckRunner
-        # runner = CheckRunner(all_configs)
-        # runner.run_checks()
-            
-        # 4. Close the window (might move this into the CheckRunner's completion signal)
-        self.accept()
+        self.runner.run_checks()
