@@ -69,6 +69,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         # 1. Initialize UI components and connect signals
         self._init_button_box()
         self._init_check_ui()
+        self.siteCodeLineEdit = self.findChild(QtWidgets.QLineEdit, "siteCodeLineEdit")
         
         # 2. Add an initial row for each section to start
         self._add_check_row('duplicate')
@@ -169,7 +170,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         
         
         field_combo = QgsFieldComboBox()
-        field_combo.setObjectName("duplicateFieldCombo")
+        field_combo.setObjectName("duplicateFieldCombo")s
         
         # Auto-update field combobox when layer changes
         layer_combo.layerChanged.connect(field_combo.setLayer)
@@ -178,46 +179,64 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         layout.addWidget(field_combo, 30)
 
     def _setup_spatial_row(self, layout: QHBoxLayout):
-        """Sets up Parent/Child Layer Comboboxes and Relationship ComboBox."""
+        """Sets up Parent/Child Layer and Unique Field Comboboxes for Spatial Check."""
+
         
-        # 1. Parent Layer
+        # 1. Parent Layer and ID
         parent_layer = QgsMapLayerComboBox()
         parent_layer.setObjectName("spatialParentLayerCombo")
         parent_layer.setFilters(QgsMapLayerProxyModel.PolygonLayer)
 
-        # 2. Child Layer
+
+        # 2. Child Layer and ID
         child_layer = QgsMapLayerComboBox()
         child_layer.setObjectName("spatialChildLayerCombo")
         child_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
-        
-        # 3. Relationship ComboBox
-        relationship_combo = QComboBox()
-        relationship_combo.setObjectName("spatialRelationshipCombo")
-        for text, data in self.SPATIAL_RELATIONSHIPS:
-            relationship_combo.addItem(text, data)
 
-        # Adjust the stretch ratios for three items + button (40, 40, 10, 10)
-        layout.addWidget(parent_layer, 35) 
-        layout.addWidget(child_layer, 35)
-        layout.addWidget(relationship_combo, 20)
+        child_unique_field_combo = QgsFieldComboBox()
+        child_unique_field_combo.setObjectName("spatialChildUniqueFieldCombo")
+        child_layer.layerChanged.connect(child_unique_field_combo.setLayer)
+        
+        # 3. Add all the widgets to the layout
+   
+        layout.addWidget(parent_layer, 25)
+
+        layout.addWidget(child_layer, 25)
+  
+        layout.addWidget(child_unique_field_combo, 15)
+
+
 
 
     def _setup_exclusion_row(self, layout: QHBoxLayout):
-        """Sets up Target Layer and Exclusion Zone Layer Comboboxes."""
+        """Sets up Target Layer, Exclusion Zone Layer, and Unique Field Comboboxes."""
         
-        # 1. Target Layer (The layer being checked)
+        
+        # 1. Target Layer and ID
         target_layer = QgsMapLayerComboBox()
         target_layer.setObjectName("exclusionTargetLayerCombo")
         target_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        # 2. Exclusion Zone Layer (The layer defining the constraint)
+        target_unique_field_combo = QgsFieldComboBox()
+        target_unique_field_combo.setObjectName("exclusionTargetUniqueFieldCombo")
+        target_layer.layerChanged.connect(target_unique_field_combo.setLayer)
+
+        # 2. Exclusion Zone Layer and ID
         exclusion_layer = QgsMapLayerComboBox()
         exclusion_layer.setObjectName("exclusionZoneLayerCombo")
         exclusion_layer.setFilters(QgsMapLayerProxyModel.VectorLayer)
 
-        # Adjust the stretch ratios for two items + button (45, 45, 10)
-        layout.addWidget(target_layer, 45)
-        layout.addWidget(exclusion_layer, 45)
+
+
+        # Add all the widgets to the layout
+   
+        layout.addWidget(target_layer, 25)
+   
+        layout.addWidget(target_unique_field_combo, 15)
+
+        layout.addWidget(exclusion_layer, 25)
+
+
 
 
     def _remove_check_row(self, row_widget: QWidget, check_type: str):
@@ -253,29 +272,35 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         return configs
         
     def get_spatial_check_configs(self) -> list:
-        """Collects Parent Layer, Child Layer, and Relationship for all Spatial Check rows."""
+        """Collects Parent/Child Layers, Relationship, and Unique Field Names."""
         configs = []
         for row_widget in self.check_rows['spatial']:
             parent_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialParentLayerCombo")
             child_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialChildLayerCombo")
             rel_combo = row_widget.findChild(QComboBox, "spatialRelationshipCombo")
             
-            if parent_combo and child_combo and rel_combo:
+            # --- NEW: Get the unique ID field combo boxes ---
+            child_id_combo = row_widget.findChild(QgsFieldComboBox, "spatialChildUniqueFieldCombo")
+
+            if parent_combo and child_combo and rel_combo and child_id_combo:
                 parent_layer = parent_combo.currentLayer()
                 child_layer = child_combo.currentLayer()
                 relationship_data = rel_combo.currentData()
+                child_unique_field = child_id_combo.currentField()
                 
-                # Ensure both layers are selected and a valid relationship is chosen
-                if parent_layer and child_layer and relationship_data:
+                # Ensure both layers are selected, a valid relationship, and a unique field are chosen
+                if parent_layer and child_layer and relationship_data and child_unique_field:
                     configs.append({
                         'check_type': 'spatial',
                         'parent_id': parent_layer.id(),
                         'parent_name': parent_layer.name(),
                         'child_id': child_layer.id(),
                         'child_name': child_layer.name(),
-                        'relationship': relationship_data # 'within', 'contains', etc.
+                        'child_unique_field': child_unique_field, 
+                        'relationship': relationship_data
                     })
         return configs
+    
 
     def get_exclusion_check_configs(self) -> list:
         """Collects Target Layer and Exclusion Layer for all Exclusion Zone Check rows."""
@@ -283,19 +308,27 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         for row_widget in self.check_rows['exclusion']:
             target_combo = row_widget.findChild(QgsMapLayerComboBox, "exclusionTargetLayerCombo")
             exclusion_combo = row_widget.findChild(QgsMapLayerComboBox, "exclusionZoneLayerCombo")
-            
-            if target_combo and exclusion_combo:
+            target_id_combo = row_widget.findChild(QgsFieldComboBox, "exclusionTargetUniqueFieldCombo")
+
+            # Check if the widgets were found and if layers and fields are selected
+            if (target_combo and exclusion_combo and 
+                target_id_combo and 
+                target_combo.currentLayer() and exclusion_combo.currentLayer() and 
+                target_id_combo.currentField() ):
+                    
                 target_layer = target_combo.currentLayer()
                 exclusion_layer = exclusion_combo.currentLayer()
+                target_unique_field = target_id_combo.currentField()
+
                 
-                if target_layer and exclusion_layer:
-                    configs.append({
-                        'check_type': 'exclusion',
-                        'target_id': target_layer.id(),
-                        'target_name': target_layer.name(),
-                        'exclusion_id': exclusion_layer.id(),
-                        'exclusion_name': exclusion_layer.name()
-                    })
+                configs.append({
+                    'check_type': 'exclusion',
+                    'target_id': target_layer.id(),
+                    'target_name': target_layer.name(),
+                    'target_unique_field': target_unique_field,
+                    'exclusion_name': exclusion_layer.name(),
+                })
+                
         return configs
 
     # Get a select directory
@@ -339,7 +372,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
     def run_audit_checks(self):
         """Main function to collect all configurations and initiate the audit process."""
         
-        # 1. Collect all configurations (existing code)
+        # 1. Collect all configurations
         all_configs = []
         all_configs.extend(self.get_duplicate_check_configs())
         all_configs.extend(self.get_spatial_check_configs())
@@ -351,22 +384,30 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
                                 "No check configurations have been selected. Please add and configure at least one row.")
             return
 
-        # 3. Get the report save path from the user (NEW STEP)
+        # 3. Get the report save path from the user
         report_path = self._get_report_save_path()
-        
         if not report_path:
             # User cancelled the save dialog
             return
             
+        # --- FINAL STEP: Collect the high-level report configuration ---
+        report_config = {
+            # Assuming you have a QLineEdit for the site code
+            'site_code': self.siteCodeLineEdit.text() if hasattr(self, 'siteCodeLineEdit') else 'Audit_Project'
+            
+        }
+        # ---------------------------------------------------------------
+                
         # 4. Start the audit process: Instantiate the Runner
         self.runner = AuditRunner(
             all_configs=all_configs,
             progress_bar=self.progressBar,
-            report_path=report_path, # <--- PASS THE NEW PATH
+            report_path=report_path,
+            report_config=report_config, # <-- Now passing the report config
             parent=self
         )
         
-        # 5. Connect the Runner's signal to the completion handler (NEW CONNECTION)
+        # 5. Connect the Runner's signal to the completion handler
         self.runner.report_generated.connect(self._handle_audit_completion)
 
         # 6. Show the progress bar and Start the audit work

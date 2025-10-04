@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
-    <height>600</height>
+    <width>959</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -35,7 +35,7 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
-   <item row="0" column="0">
+   <item row="4" column="0">
     <widget class="QWidget" name="contentWidget" native="true">
      <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,70,30">
       <item row="0" column="2">
@@ -87,10 +87,128 @@ p, li { white-space: pre-wrap; }
            <x>0</x>
            <y>0</y>
            <width>598</width>
-           <height>488</height>
+           <height>413</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <item row="2" column="0">
+           <widget class="QFrame" name="exclusionCheckSection">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <widget class="QLabel" name="exclusionLabel">
+               <property name="font">
+                <font>
+                 <pointsize>9</pointsize>
+                </font>
+               </property>
+               <property name="text">
+                <string>Check Exclusion Zone</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="exclusionCheckContent" stretch="5,90,0,5">
+               <item>
+                <widget class="QWidget" name="labelExclusionWidget" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="25,25,25,0">
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>10</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QLabel" name="targetLayerLabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>145</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Target Layer</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="targetLayerUID">
+                    <property name="maximumSize">
+                     <size>
+                      <width>80</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Target UID</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="exclusionLayerLabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Exclusion Layer</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_2">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="exclusionCheckBaseRow"/>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="addExclusionButton">
+                 <property name="text">
+                  <string>Add new row</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QFrame" name="duplicateCheckSection">
             <property name="frameShape">
@@ -113,7 +231,7 @@ p, li { white-space: pre-wrap; }
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="duplicateCheckContent" stretch="5,90,5">
+              <layout class="QVBoxLayout" name="duplicateCheckContent" stretch="5,90,0,5">
                <item>
                 <widget class="QWidget" name="labelDuplicateWidget" native="true">
                  <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="65,40">
@@ -131,6 +249,12 @@ p, li { white-space: pre-wrap; }
                   </property>
                   <item>
                    <widget class="QLabel" name="duplicateLayerLabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>310</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="text">
                      <string>Input Layer</string>
                     </property>
@@ -153,11 +277,27 @@ p, li { white-space: pre-wrap; }
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="duplicateCheckBaseRow" stretch="">
+                <layout class="QHBoxLayout" name="duplicateCheckBaseRow">
+                 <property name="spacing">
+                  <number>0</number>
+                 </property>
                  <property name="bottomMargin">
                   <number>0</number>
                  </property>
                 </layout>
+               </item>
+               <item>
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <widget class="QPushButton" name="addDuplicateLayerButton">
@@ -199,10 +339,10 @@ p, li { white-space: pre-wrap; }
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="spatialCheckContent" stretch="5,90,5">
+              <layout class="QVBoxLayout" name="spatialCheckContent" stretch="5,90,0,5">
                <item>
                 <widget class="QWidget" name="labelSpatialWidget" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="25,25,25,0">
                   <property name="leftMargin">
                    <number>0</number>
                   </property>
@@ -214,93 +354,83 @@ p, li { white-space: pre-wrap; }
                   </property>
                   <item>
                    <widget class="QLabel" name="parentLabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>145</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="text">
                      <string>Parent Layer</string>
+                    </property>
+                    <property name="textFormat">
+                     <enum>Qt::AutoText</enum>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QLabel" name="childLabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>130</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="text">
                      <string>Child Layer</string>
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="QLabel" name="childLayerUIDlabel">
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Child UID</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
                  </layout>
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="spatialCheckBaseRow" stretch=""/>
+                <layout class="QHBoxLayout" name="spatialCheckBaseRow"/>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <widget class="QPushButton" name="addSpatialButton">
-                 <property name="text">
-                  <string>Add new row</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QFrame" name="exclusionCheckSection">
-            <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
-            </property>
-            <property name="frameShadow">
-             <enum>QFrame::Raised</enum>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <widget class="QLabel" name="exclusionLabel">
-               <property name="font">
-                <font>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Check Exclusion Zone</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="exclusionCheckContent" stretch="5,90,5">
-               <item>
-                <widget class="QWidget" name="labelExclusionWidget" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_3">
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>10</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="targetLayerLabel">
-                    <property name="text">
-                     <string>Target Layer</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="exclusionLayerLabel">
-                    <property name="text">
-                     <string>Exclusion Zone/Constraint</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item>
-                <layout class="QHBoxLayout" name="exclusionCheckBaseRow" stretch=""/>
-               </item>
-               <item>
-                <widget class="QPushButton" name="addExclusionButton">
                  <property name="text">
                   <string>Add new row</string>
                  </property>
@@ -318,7 +448,7 @@ p, li { white-space: pre-wrap; }
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="5" column="0">
     <widget class="QWidget" name="bottomWidget" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -337,6 +467,22 @@ p, li { white-space: pre-wrap; }
          <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="siteCodeLabel">
+        <property name="text">
+         <string>Report Title (Project name/Site Code):</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="siteCodeLineEdit"/>
       </item>
      </layout>
     </widget>
