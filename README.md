@@ -23,7 +23,7 @@ Instant HTML Report: Generate and share a clean report immediately after running
 ---
 ![HTML Report Snapshot](https://github.com/leiding06/gis-auditor-report/blob/main/public/sample_output/git_auditor_report_layout.png)
 
-![Report Layout](https://github.com/leiding06/gis-auditor-report/blob/main/public/sample_output/gis_report_demo_html.pdf)
+![Report Layout](https://github.com/leiding06/gis-auditor-report/blob/main/public/sample_output/gis_auditor_report_html_snapshot.png)
 ## Getting Started
 
 ### Installation
