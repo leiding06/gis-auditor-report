@@ -170,7 +170,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         
         
         field_combo = QgsFieldComboBox()
-        field_combo.setObjectName("duplicateFieldCombo")s
+        field_combo.setObjectName("duplicateFieldCombo")
         
         # Auto-update field combobox when layer changes
         layer_combo.layerChanged.connect(field_combo.setLayer)
