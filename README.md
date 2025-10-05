@@ -21,14 +21,16 @@ Automated Report Details: Every HTML report includes the generation timestamp an
 Instant HTML Report: Generate and share a clean report immediately after running your checks. PDF format available in browser - Print to PDF.
 
 ---
+![HTML Report Snapshot](https://github.com/leiding06/gis_auditor_report/raw/main/public/sample_output/gis_auditor_report_html_snapshot.png)
 
+![Report Layout](https://github.com/leiding06/gis_auditor_report/raw/main/public/sample_output/git_auditor_report_layout.png)
 ## Getting Started
 
 ### Installation
 
 1.  Open QGIS.
 2.  Navigate to **Plugins** -> **Manage and Install Plugins...**
-3.  Search for **`GIS CrossCheck Toolbox`**.
+3.  Search for **`GIS Auditor Report`**.
 4.  Click **Install**.
 
 ### Usage
