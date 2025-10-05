@@ -46,21 +46,16 @@
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:xx-large; font-weight:600;&quot;&gt;GIS Auditor Report&lt;/span&gt;&lt;/h1&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This powerful tool provides a systematic and user-friendly &lt;span style=&quot; font-weight:600;&quot;&gt;Quality Assurance (QA/QC) framework&lt;/span&gt; for validating your vector data in QGIS. The Auditor offers a GUI-driven, highly flexible way to configure and run complex data checks, yielding a clean, shareable HTML&lt;span style=&quot; font-weight:600;&quot;&gt; &lt;/span&gt;report&lt;span style=&quot; font-weight:600;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This powerful tool provides a systematic and user-friendly &lt;span style=&quot; font-weight:600;&quot;&gt;Quality Assurance (QA/QC) framework&lt;/span&gt; for validating your vector data in QGIS. The Auditor offers a GUI-driven, highly flexible way to configure and run complex data checks, yielding a clean, shareable HTMLreport&lt;span style=&quot; font-weight:600;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;h4 style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Available Checks&lt;/span&gt;&lt;/h4&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1. Check Duplicate Values&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;Purpose: Validates if the selected attribute field contains duplicate values. This is essential for verifying unique IDs or feature names.            &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;Configuration: Select the target Layer and the Field Name to be audited.                &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;2. Check Spatial Relationship&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;Purpose: Verifies fundamental topological rules, ensuring that &lt;span style=&quot; font-weight:600;&quot;&gt;Child Features&lt;/span&gt; (e.g., points) adhere to spatial rules relative to their &lt;span style=&quot; font-weight:600;&quot;&gt;Parent Features&lt;/span&gt; (e.g., polygons).            &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;Configuration: Select the Parent Layer, Child Layer, and the required spatial relationship (e.g., &amp;quot;Child must be Within Parent&amp;quot; or &amp;quot;Parent must Contain Child&amp;quot;).                &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;3. Check Exclusion Zone&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt; Purpose: Identifies features that violate a predefined restricted area. This check ensures that the &lt;span style=&quot; font-weight:600;&quot;&gt;Target Layer&lt;/span&gt; does not intersect or touch the *Exclusion Zone. &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;Configuration: Select the Target Layer and the Exclusion Zone Layer.            &lt;/p&gt;
-&lt;h4 style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Usage Instructions&lt;/span&gt;&lt;/h4&gt;
-&lt;ol style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot;&quot; style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Add Configuration:&lt;/span&gt; Click the &lt;span style=&quot; font-weight:600;&quot;&gt;Add one row&lt;/span&gt; button under the desired check type to add a configuration row.    &lt;/li&gt;
-&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Configure Parameters:&lt;/span&gt; Select the required &lt;span style=&quot; font-weight:600;&quot;&gt;Layer&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;Field/Relationship&lt;/span&gt; parameters for the new row.    &lt;/li&gt;
-&lt;li style=&quot;&quot; style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Run Audit:&lt;/span&gt; Click the &lt;span style=&quot; font-weight:600;&quot;&gt;Run&lt;/span&gt; button at the bottom right. The plugin will execute all configured checks.&lt;/li&gt;&lt;/ol&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Validates if the selected attribute field contains duplicate values. This is essential for verifying unique IDs or feature names. &lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2. Check Spatial Relationship&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Verifies fundamental topological rules, ensuring that &lt;span style=&quot; font-weight:600;&quot;&gt;Child Features&lt;/span&gt; (e.g., points) located within their &lt;span style=&quot; font-weight:600;&quot;&gt;Parent Features&lt;/span&gt; (must be polygons). &lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. Check Exclusion Zone&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Identifies features that violate a predefined restricted area. This check ensures that the &lt;span style=&quot; font-weight:600;&quot;&gt;Target Layer&lt;/span&gt; does not intersect or touch the *Exclusion Zone. &lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Configuration: Select the Target Layer and the Exclusion Zone Layer. &lt;/p&gt;
+&lt;h4 style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Usage Instructions&lt;/span&gt;&lt;/h4&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
       </item>
@@ -118,7 +113,7 @@ p, li { white-space: pre-wrap; }
               <layout class="QVBoxLayout" name="exclusionCheckContent" stretch="5,90,0,5">
                <item>
                 <widget class="QWidget" name="labelExclusionWidget" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="25,25,25,0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,25,25,0">
                   <property name="leftMargin">
                    <number>0</number>
                   </property>
@@ -128,6 +123,25 @@ p, li { white-space: pre-wrap; }
                   <property name="bottomMargin">
                    <number>0</number>
                   </property>
+                  <item>
+                   <widget class="QLabel" name="exclusionLayerLabel">
+                    <property name="minimumSize">
+                     <size>
+                      <width>175</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>175</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>Exclusion Layer</string>
+                    </property>
+                   </widget>
+                  </item>
                   <item>
                    <widget class="QLabel" name="targetLayerLabel">
                     <property name="maximumSize">
@@ -145,25 +159,12 @@ p, li { white-space: pre-wrap; }
                    <widget class="QLabel" name="targetLayerUID">
                     <property name="maximumSize">
                      <size>
-                      <width>100</width>
+                      <width>80</width>
                       <height>16777215</height>
                      </size>
                     </property>
                     <property name="text">
                      <string>Target UID</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="exclusionLayerLabel">
-                    <property name="maximumSize">
-                     <size>
-                      <width>180</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Exclusion Layer</string>
                     </property>
                    </widget>
                   </item>

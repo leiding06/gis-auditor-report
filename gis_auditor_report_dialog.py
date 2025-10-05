@@ -57,6 +57,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(GISAuditorReportDialog, self).__init__(parent)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setupUi(self)
         self.progressBar.setValue(0) # Start from 0 not the default 24, but can use a bigger number when take screenshot for product page
         # Dictionary to store dynamically created row widgets for each check type.
@@ -195,7 +196,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
 
         child_unique_field_combo = QgsFieldComboBox()
         child_unique_field_combo.setObjectName("spatialChildUniqueFieldCombo")
-        child_layer.layerChanged.connect(child_unique_field_combo.setLayer)
+        child_layer.layerChanged.connect(child_unique_field_combo.setLayer) # Send signal of the new layer, get the list
         
         # 3. Add all the widgets to the layout
    
@@ -229,12 +230,11 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
 
 
         # Add all the widgets to the layout
-   
+        layout.addWidget(exclusion_layer, 25)
         layout.addWidget(target_layer, 25)
-   
         layout.addWidget(target_unique_field_combo, 15)
 
-        layout.addWidget(exclusion_layer, 25)
+        
 
 
 
@@ -249,6 +249,19 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
             # Remove reference from the list
             self.check_rows[check_type].remove(row_widget)
 
+    # User has to provide a site code
+    def _validate_site_code(self) -> bool:
+        """Validates that the site code is not empty."""
+        site_code = self.siteCodeLineEdit.text().strip()
+        if not site_code:
+            QMessageBox.warning(
+                self, 
+                "Title Required", 
+                "Please enter a Project Name/Site Code/Report Title before running the audit."
+            )
+            self.siteCodeLineEdit.setFocus()
+            return False
+        return True
 
     # ----------------------------------------------------------------------
     # Configuration Collection Methods
@@ -277,30 +290,29 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         for row_widget in self.check_rows['spatial']:
             parent_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialParentLayerCombo")
             child_combo = row_widget.findChild(QgsMapLayerComboBox, "spatialChildLayerCombo")
-            rel_combo = row_widget.findChild(QComboBox, "spatialRelationshipCombo")
-            
-            # --- NEW: Get the unique ID field combo boxes ---
             child_id_combo = row_widget.findChild(QgsFieldComboBox, "spatialChildUniqueFieldCombo")
 
-            if parent_combo and child_combo and rel_combo and child_id_combo:
+            if parent_combo and child_combo and child_id_combo:
                 parent_layer = parent_combo.currentLayer()
                 child_layer = child_combo.currentLayer()
-                relationship_data = rel_combo.currentData()
                 child_unique_field = child_id_combo.currentField()
                 
-                # Ensure both layers are selected, a valid relationship, and a unique field are chosen
-                if parent_layer and child_layer and relationship_data and child_unique_field:
+                # Ensure both layers are selected and a unique field is chosen
+                if parent_layer and child_layer and child_unique_field:
                     configs.append({
                         'check_type': 'spatial',
                         'parent_id': parent_layer.id(),
                         'parent_name': parent_layer.name(),
                         'child_id': child_layer.id(),
                         'child_name': child_layer.name(),
-                        'child_unique_field': child_unique_field, 
-                        'relationship': relationship_data
+                        'child_unique_field': child_unique_field
                     })
+                    print(f"[DEBUG] Spatial config added: {parent_layer.name()} -> {child_layer.name()}")
+                else:
+                    print(f"[WARNING] Skipping incomplete spatial check row")
+                    
         return configs
-    
+
 
     def get_exclusion_check_configs(self) -> list:
         """Collects Target Layer and Exclusion Layer for all Exclusion Zone Check rows."""
@@ -311,43 +323,47 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
             target_id_combo = row_widget.findChild(QgsFieldComboBox, "exclusionTargetUniqueFieldCombo")
 
             # Check if the widgets were found and if layers and fields are selected
-            if (target_combo and exclusion_combo and 
-                target_id_combo and 
-                target_combo.currentLayer() and exclusion_combo.currentLayer() and 
-                target_id_combo.currentField() ):
-                    
+            if (target_combo and exclusion_combo and target_id_combo):
                 target_layer = target_combo.currentLayer()
                 exclusion_layer = exclusion_combo.currentLayer()
                 target_unique_field = target_id_combo.currentField()
-
                 
-                configs.append({
-                    'check_type': 'exclusion',
-                    'target_id': target_layer.id(),
-                    'target_name': target_layer.name(),
-                    'target_unique_field': target_unique_field,
-                    'exclusion_name': exclusion_layer.name(),
-                })
-                
+                # Ensure all required values are present
+                if target_layer and exclusion_layer and target_unique_field:
+                    configs.append({
+                        'check_type': 'exclusion',
+                        'exclusion_id': exclusion_layer.id(),  # ✅ FIXED: Added this!
+                        'exclusion_name': exclusion_layer.name(),
+                        'target_id': target_layer.id(),
+                        'target_name': target_layer.name(),
+                        'target_unique_field': target_unique_field
+                    })
+                    print(f"[DEBUG] Exclusion config added: {target_layer.name()} vs {exclusion_layer.name()}")
+                else:
+                    print(f"[WARNING] Skipping incomplete exclusion check row")
+                    
         return configs
 
     # Get a select directory
     def _get_report_save_path(self):
         """Opens a file dialog to let the user choose the output HTML report path."""
         
-        # QFileDialog.getSaveFileName returns a tuple (filepath, filter)
-        # The default file name should be relevant (e.g., 'GIS_Audit_Report_20251004.html')
-        default_name = "GIS_Audit_Report_" + QDateTime.currentDateTime().toString("yyyyMMdd_hhmmss") + ".html"
+        # Get site code for the default filename
+        site_code = self.siteCodeLineEdit.text().strip()
+        if site_code:
+            default_name = f"{site_code}_GIS_Audit_Report_{QDateTime.currentDateTime().toString('yyyyMMdd_hhmmss')}.html"
+        else:
+            default_name = f"GIS_Audit_Report_{QDateTime.currentDateTime().toString('yyyyMMdd_hhmmss')}.html"
         
         # Use QFileDialog to get a save file name
         filepath, _ = QFileDialog.getSaveFileName(
             self,
-            "Save Audit Report", # Dialog title
-            os.path.join(QDir.homePath(), default_name), # Default starting location
-            "HTML Report (*.html)" # File filter
+            "Save Audit Report",
+            os.path.join(QDir.homePath(), default_name),
+            "HTML Report (*.html)"
         )
-        
-        return filepath # Returns the selected file path (or an empty string if cancelled)
+    
+        return filepath
 
     def _handle_audit_completion(self, report_path: str):
         """
@@ -371,43 +387,49 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
 
     def run_audit_checks(self):
         """Main function to collect all configurations and initiate the audit process."""
-        
-        # 1. Collect all configurations
+        # 1. Validate site code first (NEW)
+        print('[DEBUG] Run button clicked')
+        if not self._validate_site_code():
+            print('[DEBUG] Site code validation failed')
+            return
+        print('[DEBUG] Passed site code validation')
+        # 2. Collect all configurations
         all_configs = []
         all_configs.extend(self.get_duplicate_check_configs())
         all_configs.extend(self.get_spatial_check_configs())
         all_configs.extend(self.get_exclusion_check_configs())
 
-        # 2. Check for tasks
+        # 3. Check for tasks
         if not all_configs:
-            QMessageBox.warning(self, "Audit Warning", 
-                                "No check configurations have been selected. Please add and configure at least one row.")
+            QMessageBox.warning(
+                self, 
+                "No Checks Configured", 
+                "No check configurations have been selected.\n\n"
+                "Please add and configure at least one check in any section."
+            )
             return
 
-        # 3. Get the report save path from the user
+        # 4 Get the report save path from the user
         report_path = self._get_report_save_path()
         if not report_path:
             # User cancelled the save dialog
             return
             
-        # --- FINAL STEP: Collect the high-level report configuration ---
+        # 5. Collect the high-level report configuration
         report_config = {
-            # Assuming you have a QLineEdit for the site code
-            'site_code': self.siteCodeLineEdit.text() if hasattr(self, 'siteCodeLineEdit') else 'Audit_Project'
-            
+            'site_code': self.siteCodeLineEdit.text().strip()
         }
-        # ---------------------------------------------------------------
-                
-        # 4. Start the audit process: Instantiate the Runner
+                        
+        # 6. Start the audit process: Instantiate the Runner
         self.runner = AuditRunner(
             all_configs=all_configs,
             progress_bar=self.progressBar,
             report_path=report_path,
-            report_config=report_config, # <-- Now passing the report config
+            report_config=report_config, 
             parent=self
         )
         
-        # 5. Connect the Runner's signal to the completion handler
+        # 7. Connect the Runner's signal to the completion handler
         self.runner.report_generated.connect(self._handle_audit_completion)
 
         # 6. Show the progress bar and Start the audit work

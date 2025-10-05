@@ -5,6 +5,10 @@ from qgis.PyQt.QtWidgets import QProgressBar
 from .check.duplicate_check import DuplicateCheck # Corrected import path
 from .check.spatial_check import SpatialCheck
 from .check.exclusion_check import ExclusionCheck
+from .report_generator import ReportGenerator # type: ignore
+
+
+
 class AuditRunner(QObject):
     """
     Main controller for the audit process. 
@@ -23,15 +27,15 @@ class AuditRunner(QObject):
         self.report_path = report_path
         self.total_checks = len(all_configs)
         self.current_check_count = 0
-        self.report_config = report_config  # <-- New: Store the report config
+        self.report_config = report_config 
         
-        # --- NEW: Use a dictionary to store results by check type ---
+   
         self.results = {
             'duplicate': [],
             'spatial': [],
             'exclusion': []
         }
-        # -------------------------------------------------------------
+
         
     def run_checks(self):
         """Initiates the execution of all configured checks sequentially."""
@@ -68,16 +72,27 @@ class AuditRunner(QObject):
         elif check_type == 'spatial':
             checker = SpatialCheck(config)
             check_result = checker.run()
-            print(f"Executing Spatial Check for config: {config}")
+            self.results['spatial'].append(check_result)
 
 
         elif check_type == 'exclusion':
             checker = ExclusionCheck(config)
             check_result = checker.run()
-            print(f"Executing Exclusion Zone Check for config: {config}")
+            self.results['exclusion'].append(check_result)
 
     def _generate_report(self):
-        """Compiles the collected results into the final HTML report."""
+        """
+        Calls the ReportGenerator to compile the collected results into the final HTML report.
+        """
         print("All checks completed. Generating report...")
-        # Now report generation logic can access self.results['duplicate'], self.results['spatial'], etc.
-        pass
+        
+        # Instantiate the ReportGenerator with the path, results, and config
+        generator = ReportGenerator(self.report_path, self.results, self.report_config)
+        
+        # Call the method to build and save the report file
+        try:
+            generator.generate_report()
+        except Exception as e:
+            # Handle potential file writing errors
+            print(f"Error generating report: {e}")
+            pass
