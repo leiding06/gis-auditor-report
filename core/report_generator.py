@@ -36,15 +36,39 @@ class ReportGenerator:
             <title>GIS Auditor Report</title>
             <style>
                 body {{ font-family: sans-serif; margin: 2em; }}
-                h1, h2, h3 {{ color: #007985; }}
-                h1 {{ text-align: center; }}
+                h1 {{ text-align: center; color: #4a6891; font-size: 2.2em; }}
+                h2 {{ color: #4a6891; font-size: 1.3em; margin-top: 1.7em; }}
+                h3 {{ color: #4a6891; font-size: 1.1em; }}
+                .summary-box {{ background-color: #bed5e8; padding: 1em; border-radius: 5px; margin-bottom: 2em; }}
+                .table-small {{ font-size: 0.92em; }}
                 table {{ width: 100%; border-collapse: collapse; margin-top: 1em; margin-bottom: 2em; }}
-                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; }}
+                th, td {{ border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 0.75em; }}
                 th {{ background-color: #f2f2f2; font-weight: bold; }}
-                .summary-box {{ background-color: #e6f7ff; padding: 1em; border-radius: 5px; margin-bottom: 2em; }}
-                .no-errors {{ color: green; font-weight: bold; }}
+                .no-errors {{ color: green; font-weight: bold; font-size: 0.75em}}
                 .has-errors {{ color: red; font-weight: bold; }}
-                .section-description {{ font-style: italic; color: #666; margin-bottom: 1em; }}
+                .section-description {{ font-style: italic; color: #666; margin-bottom: 1em; font-size: 0.75em}}
+
+                .summary-flex {{
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 2em;
+                    align-items: flex-start;
+                }}
+                .summary-item {{
+                    flex: 1 1 270px;
+                    min-width: 210px;
+                    margin-bottom: .2em;
+                     font-size: 0.9em
+                }}
+                @media (max-width: 600px) {{
+                    .summary-flex {{
+                        flex-direction: column;
+                        gap: .7em;
+                    }}
+                    .summary-item {{
+                        min-width: 0;
+                    }}
+                }}
             </style>
         </head>
         <body>
@@ -54,6 +78,7 @@ class ReportGenerator:
             <hr>
         """
         return html
+    
 
     def _generate_duplicate_check_html(self):
         """Generates the HTML table for duplicate check results."""
@@ -65,10 +90,10 @@ class ReportGenerator:
         if self.results.get('duplicate'):
             has_errors = any(r.get('errors', []) for r in self.results['duplicate'])
             
-            html_content += "<h2>Duplicate Values Check</h2>"
+            html_content += "<h3>Duplicate Values Check</h3>"
             html_content += '<p class="section-description">This check identifies values that appear more than once in fields that should contain unique values.</p>'
-            
-            if has_errors:
+            errors_exist = any(r.get('errors', []) for r in self.results['duplicate'])
+            if errors_exist:
                 html_content += """
                 <table>
                     <tr>
@@ -89,10 +114,16 @@ class ReportGenerator:
                             html_content += f"<tr><td>{layer_name}</td><td>{field_name}</td><td>{value}</td><td>{count}</td></tr>"
                 
                 html_content += "</table>"
-            else:
-                html_content += "<p class='no-errors'>✓ No duplicate values found.</p>"
-        
+
+            # Layer passed check: 
+            for check_result in self.results['duplicate']:
+                if not check_result.get('errors'):
+                    layer_name = check_result.get('layer_name', 'Unknown Layer')
+                    field_name = check_result.get('field_name', 'Unknown Field')
+                    html_content += f'<p class="no-errors">✓ {layer_name} ({field_name}): No duplicate values found.</p>'
         return html_content
+    
+
 
     def _generate_spatial_check_html(self):
         """Generates the HTML table for spatial check results."""
@@ -104,7 +135,7 @@ class ReportGenerator:
         if self.results.get('spatial'):
             has_errors = any(r.get('errors', []) for r in self.results['spatial'])
             
-            html_content += "<h2>Spatial Relationship Check</h2>"
+            html_content += "<h3>Spatial Relationship Check</h3>"
             html_content += '<p class="section-description">This check identifies child features that are not contained within their parent features.</p>'
             
             if has_errors:
@@ -126,9 +157,12 @@ class ReportGenerator:
                             html_content += f"<tr><td>{parent_name}</td><td>{child_name}</td><td>{child_id}</td></tr>"
                 
                 html_content += "</table>"
-            else:
-                html_content += "<p class='no-errors'>✓ All child features are properly contained within their parent features.</p>"
-        
+            # Layers passed check
+            for check_result in self.results['spatial']:
+                if not check_result.get('errors'):
+                    parent_name = check_result.get('parent_layer_name', 'Unknown Parent')
+                    child_name = check_result.get('child_layer_name', 'Unknown Child')
+                    html_content += f'<p class="no-errors">✓ {child_name} vs {parent_name}: All child-features are properly contained within parent polygon.</p>'
         return html_content
 
     def _generate_exclusion_check_html(self):
@@ -141,7 +175,7 @@ class ReportGenerator:
         if self.results.get('exclusion'):
             has_errors = any(r.get('errors', []) for r in self.results['exclusion'])
             
-            html_content += "<h2>Exclusion Zone Check</h2>"
+            html_content += "<h3>Exclusion Zone Check</h3>"
             html_content += '<p class="section-description">This check identifies target features that intersect with exclusion zones.</p>'
             
             if has_errors:
@@ -163,10 +197,16 @@ class ReportGenerator:
                             html_content += f"<tr><td>{exclusion_name}</td><td>{target_name}</td><td>{target_id}</td></tr>"
                 
                 html_content += "</table>"
-            else:
-                html_content += "<p class='no-errors'>✓ No features intersect with exclusion zones.</p>"
-        
+
+            #Layer passed check
+            for check_result in self.results['exclusion']:
+                if not check_result.get('errors'):
+                    exclusion_name = check_result.get('exclusion_layer_name', 'Unknown Exclusion')
+                    target_name = check_result.get('target_layer_name', 'Unknown Target')
+                    html_content += f'<p class="no-errors">✓ {target_name} vs {exclusion_name}: No features intersect with exclusion zones.</p>'
         return html_content
+    
+
 
     def generate_report(self):
         """Main method to build the complete report and save to file."""
@@ -176,20 +216,49 @@ class ReportGenerator:
             html_content = self._get_base_html()
             
             # Add summary section
-            total_errors = sum(
-                len(r.get('errors', [])) 
-                for check_type in self.results.values() 
-                for r in check_type
+            # 1. Count checks
+            duplicate_count = len(self.results.get('duplicate', []))
+            spatial_count = len(self.results.get('spatial', []))
+            exclusion_count = len(self.results.get('exclusion', []))
+
+            # 2. Count errors...
+            duplicate_errors = sum(len(r.get('errors', [])) for r in self.results.get('duplicate', []))
+            spatial_errors = sum(len(r.get('errors', [])) for r in self.results.get('spatial', []))
+            exclusion_errors = sum(len(r.get('errors', [])) for r in self.results.get('exclusion', []))
+            total_errors = duplicate_errors + spatial_errors + exclusion_errors
+
+            # 3. Count check type
+            checks_performed = sum(1 for count in [duplicate_count, spatial_count, exclusion_count] if count > 0)
+
+            html_content += '''
+            <div class="summary-box">
+            <h2>Summary</h2>
+            <div class="summary-flex">
+                <div class="summary-item">
+                <strong>Types of Checks Performed: {checks_performed}</strong><br>
+                Duplicate: {duplicate_count} layer{s1}<br>
+                Spatial: {spatial_count} pair{s2}<br>
+                Exclusion: {exclusion_count} pair{s3}
+                </div>
+                <div class="summary-item">
+                <strong>Error Count: {total_errors}</strong><br>
+                Duplicate: <span class="{dclass}">{duplicate_errors}</span><br>
+                Spatial: <span class="{sclass}">{spatial_errors}</span><br>
+                Exclusion: <span class="{eclass}">{exclusion_errors}</span>
+                </div>
+            </div>
+            </div>
+            '''.format(
+                checks_performed=checks_performed,
+                duplicate_count=duplicate_count, s1="s" if duplicate_count != 1 else "",
+                spatial_count=spatial_count, s2="s" if spatial_count != 1 else "",
+                exclusion_count=exclusion_count, s3="s" if exclusion_count != 1 else "",
+                duplicate_errors=duplicate_errors, dclass="has-errors" if duplicate_errors > 0 else "no-errors",
+                spatial_errors=spatial_errors, sclass="has-errors" if spatial_errors > 0 else "no-errors",
+                exclusion_errors=exclusion_errors, eclass="has-errors" if exclusion_errors > 0 else "no-errors",
+                total_errors=total_errors
             )
-            
-            # Count how many check types actually ran
-            checks_performed = sum(1 for check_type in self.results.values() if len(check_type) > 0)
-            
-            html_content += '<div class="summary-box">'
-            html_content += '<h2>Summary</h2>'
-            html_content += f'<p><strong>Checks Performed:</strong> {checks_performed}</p>'
-            html_content += f'<p><strong>Total Errors Found:</strong> <span class="{"has-errors" if total_errors > 0 else "no-errors"}">{total_errors}</span></p>'
-            html_content += '</div>'
+                        
             
             # Generate check sections - only if they were configured
             if self.results.get('duplicate'):

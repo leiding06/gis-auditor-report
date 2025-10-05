@@ -1,20 +1,24 @@
 # GIS Auditor Report
 
-GIS Auditor Report is a QGIS plugin for auditing and validating vector layers.
-It allows users to define and run a series of essential validation checks across vector layers and standalone attribute tables within a QGIS project.
-
-It helps users identify data quality issues by checking duplicate values, spatial relationships (Parent/Child adherence), and exclusion zone violations, with results available in clear, exportable reports.
+A powerful and user-friendly QA/QC plugin for validating vector data in QGIS. Configure duplicate, spatial, and exclusion-zone checks via a simple interface. Generate HTML reports, which can also be exported to PDF using your browser's print feature.
 
 ---
+
 ## Key Features
 
 Unlike rigid, project-specific QA tools, this plugin offers flexibility through user-defined checks:
 
-Duplicate Value Check: Identify non-unique attribute values for a selected field across a layer, helping to enforce data integrity and uniqueness constraints.
+Flexible Check Selection: Freely add or remove validation checks—you only run what you need, for each project.
 
-Spatial Relationship Check: Verify fundamental topological rules between features, ensuring a Child Layer (e.g., points) adheres to rules like within or contained by its Parent Layer (e.g., polygons).
+Section 1: Duplicate Value Check: Detect non-unique attribute values in any layer.
 
-Exclusion Zone Check: Identify features in a Target Layer that illegally touch or intersect a predefined Exclusion Zone boundary.
+Section 2: Spatial Relationship Check: Ensure child features (e.g., points) follow rules relative to parent features (e.g., polygons).
+
+Section 3: Exclusion Zone Check: Detect target features violating restricted areas.
+
+Automated Report Details: Every HTML report includes the generation timestamp and operator name, making results traceable and auditable.
+
+Instant HTML Report: Generate and share a clean report immediately after running your checks. PDF format available in browser - Print to PDF.
 
 ---
 
@@ -38,13 +42,13 @@ Exclusion Zone Check: Identify features in a Target Layer that illegally touch o
 
 ## For Developers & Contributors
 
-We welcome contributions! Your current code, which includes advanced logic for archaeological cross-checks, demonstrates a high level of Python and PyQGIS expertise.
+Welcome contributions!
 
 If you are interested in contributing, please check out the following areas:
 
-* **Code Cleanup/Refactoring:** Improving the modularity of the core check functions.
-* **New Checks:** Adding new check types (e.g., Value Range Checks, Topology Rules).
-* **UI/UX Improvement:** Enhancing the customisation dialog for a better user experience.
+- **Code Cleanup/Refactoring:** Improving the modularity of the core check functions.
+- **New Checks:** Adding new check types (e.g., Value Range Checks, Topology Rules).
+- **UI/UX Improvement:** Enhancing the customisation dialog for a better user experience.
 
 ### How to Contribute
 

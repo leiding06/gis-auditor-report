@@ -1,16 +1,17 @@
 [general]
 name=GIS Auditor Report
-description=A user-friendly QA/QC tool for validating GIS data with an HTML reporting interface.
+description=A powerful and user-friendly QA/QC plugin for validating vector data in QGIS. Configure duplicate, spatial, and exclusion-zone checks via a simple interface. Generate HTML reports, which can also be exported to PDF using your browser's print feature. Every report includes the generation timestamp and operator name, making results traceable and auditable.
+
 version=1.0.0
 qgisMinimumVersion=3.10
-about=
+about=GIS Auditor Report provides an interactive and systematic QA/QC workflow for vector data validation in QGIS. Configure duplicate, spatial, and exclusion-zone checks via a simple interface. Customised Generate HTML reports, which can also be exported to PDF using your browser's print feature. Every report includes the generation timestamp and operator name, making results traceable and auditable.
 icon=icon.png
 category=Vector
-author=Your Name
-email=your.email@example.com
-repository=
-**homepage=https://github.com/leiding06/gis-auditor-report**
-**tracker=https://github.com/leiding06/gis-auditor-report/issues**
+author=Lei Ding
+email=lleidding@gmail.com
+repository=https://github.com/leiding06/gis-auditor-report
+homepage=https://github.com/leiding06/gis-auditor-report
+tracker=https://github.com/leiding06/gis-auditor-report/issues
 
 [qgis]
 needs_restart=false

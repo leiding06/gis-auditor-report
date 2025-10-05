@@ -372,7 +372,7 @@ class GISAuditorReportDialog(QtWidgets.QDialog, FORM_CLASS):
         """
         
         # 1. Hide the progress bar
-        self.progressBar.hide()
+        #self.progressBar.hide()
         
         # 2. Show the success message (QMessageBox)
         QMessageBox.information(

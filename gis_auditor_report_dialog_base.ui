@@ -37,28 +37,7 @@
    </property>
    <item row="4" column="0">
     <widget class="QWidget" name="contentWidget" native="true">
-     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,70,30">
-      <item row="0" column="2">
-       <widget class="QTextBrowser" name="helpTextBrowser">
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:xx-large; font-weight:600;&quot;&gt;GIS Auditor Report&lt;/span&gt;&lt;/h1&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This powerful tool provides a systematic and user-friendly &lt;span style=&quot; font-weight:600;&quot;&gt;Quality Assurance (QA/QC) framework&lt;/span&gt; for validating your vector data in QGIS. The Auditor offers a GUI-driven, highly flexible way to configure and run complex data checks, yielding a clean, shareable HTMLreport&lt;span style=&quot; font-weight:600;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
-&lt;h4 style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Available Checks&lt;/span&gt;&lt;/h4&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1. Check Duplicate Values&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Validates if the selected attribute field contains duplicate values. This is essential for verifying unique IDs or feature names. &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2. Check Spatial Relationship&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Verifies fundamental topological rules, ensuring that &lt;span style=&quot; font-weight:600;&quot;&gt;Child Features&lt;/span&gt; (e.g., points) located within their &lt;span style=&quot; font-weight:600;&quot;&gt;Parent Features&lt;/span&gt; (must be polygons). &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. Check Exclusion Zone&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Purpose: Identifies features that violate a predefined restricted area. This check ensures that the &lt;span style=&quot; font-weight:600;&quot;&gt;Target Layer&lt;/span&gt; does not intersect or touch the *Exclusion Zone. &lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Configuration: Select the Target Layer and the Exclusion Zone Layer. &lt;/p&gt;
-&lt;h4 style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:medium; font-weight:600;&quot;&gt;Usage Instructions&lt;/span&gt;&lt;/h4&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,70,30,0">
       <item row="0" column="1">
        <widget class="QScrollArea" name="scrollArea">
         <property name="maximumSize">
@@ -456,6 +435,30 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </widget>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QTextBrowser" name="helpTextBrowser">
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a name=&quot;gis-auditor-report--usage-overview&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;G&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;IS Auditor Report — Usage Overview&lt;/span&gt;&lt;/h1&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;This powerful tool provides a user-friendly Quality Assurance (QA/QC) framework to validate your vector data in QGIS. You can flexibly configure and run essential data checks, and generate clear, shareable HTML/PDF reports.&lt;/span&gt;&lt;/p&gt;
+&lt;ol style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check Duplicate Values&lt;/span&gt;&lt;br /&gt;Validates if chosen attribute fields contain duplicates, helping ensure unique IDs or feature names.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check Spatial Relationship&lt;/span&gt;&lt;br /&gt;Validates topological rules by checking that child features (e.g., points) lie properly within parent features (polygons).&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Check Exclusion Zone&lt;/span&gt;&lt;br /&gt;Detects features violating restricted areas by verifying that target layers do not intersect exclusion zones.&lt;/li&gt;&lt;/ol&gt;
+&lt;hr /&gt;
+&lt;h2 style=&quot; margin-top:16px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a name=&quot;how-to-use&quot;&gt;&lt;/a&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;H&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;ow To Use&lt;/span&gt;&lt;/h2&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Open the plugin and enter a descriptive Report Title or Project Name or Site Code.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Add one or more checks by choosing layers and setting required fields for each check type.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Remove the default row if you do not want to include one of the check type.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Upon completion, an &lt;span style=&quot; font-weight:600;&quot;&gt;HTML report &lt;/span&gt;will be saved in selected directory and automatically opened, summarizing results with clear pass/fail flags.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;If you prefer a&lt;span style=&quot; font-weight:600;&quot;&gt; PDF version&lt;/span&gt;, please right click in your browser, and choose 'Print to PDF'&lt;/li&gt;&lt;/ul&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ensure layers used in checks are properly loaded in your QGIS project.&lt;/li&gt;
+&lt;li style=&quot; font-size:10pt;&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Use&lt;span style=&quot; font-weight:600;&quot;&gt; unique attribute fields .&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
        </widget>
       </item>
      </layout>
