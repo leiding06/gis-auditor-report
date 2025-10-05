@@ -21,9 +21,9 @@ Automated Report Details: Every HTML report includes the generation timestamp an
 Instant HTML Report: Generate and share a clean report immediately after running your checks. PDF format available in browser - Print to PDF.
 
 ---
-![HTML Report Snapshot](https://github.com/leiding06/gis_auditor_report/raw/main/public/sample_output/gis_auditor_report_html_snapshot.png)
+![HTML Report Snapshot](https://github.com/leiding06/gis-auditor-report/blob/main/public/sample_output/git_auditor_report_layout.png)
 
-![Report Layout](https://github.com/leiding06/gis_auditor_report/raw/main/public/sample_output/git_auditor_report_layout.png)
+![Report Layout](https://github.com/leiding06/gis-auditor-report/blob/main/public/sample_output/gis_report_demo_html.pdf)
 ## Getting Started
 
 ### Installation
