@@ -1,7 +1,7 @@
 # GIS Auditor Report
-
+[Plugin Homepage](https://plugins.qgis.org/search/?q=gis+auditor)
 A powerful and user-friendly QA/QC plugin for validating vector data in QGIS. Configure duplicate, spatial, and exclusion-zone checks via a simple interface. Generate HTML reports, which can also be exported to PDF using your browser's print feature.
-[QGIS Plugin Homepage](https://plugins.qgis.org/search/?q=gis+auditor)
+
 ---
 
 ## Key Features
